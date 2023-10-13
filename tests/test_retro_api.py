@@ -1,4 +1,4 @@
-from retro_api import RetroApi
+from retroapi import RetroApi
 
 
 def test_valid_smiles():

@@ -1,4 +1,4 @@
-from convert_name2smiles import Name2Smiles
+from retroapi import Name2Smiles
 
 
 def test_name_2_smiles():
