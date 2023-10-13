@@ -20,7 +20,7 @@ smiles = "COc1cccc(OC(=O)/C=C/c2cc(OC)c(OC)c(OC)c2)c1"
 # else:
 chemical_name = "4-Hydroxycoumarin"
 name2smiles = Name2Smiles()
-smiles = name2smiles.get_smiles()
+smiles = name2smiles.get_smiles(chemical_name)
 
 # check if smiles is valid or not
 is_valid_smiles = retro_api.validate_smiles(smiles)
