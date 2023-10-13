@@ -49,6 +49,12 @@ class RetroApi:
             return None
         return res.json()["output"]
 
+    def predict_routes(self, smiles: str) -> List | None:
+        task_id = self.create_task(smiles)
+        if task_id is None:
+            return None
+        return self.get_routes(task_id)
+
     def validate_smiles(self, smiles: str) -> bool:
         res = requests.post(self.Valid_URL, json={"smiles": smiles})
         if res.status_code == 200:
@@ -86,3 +92,9 @@ class RetroApi:
         if res.status_code == 200:
             return res.json()["output"]
         return None
+
+    def process_reaction(self, product: str, reactants: str) -> List | None:
+        task_id = self.create_syn_task(product, reactants)
+        if task_id is None:
+            return None
+        return self.get_syn_conditions(task_id)

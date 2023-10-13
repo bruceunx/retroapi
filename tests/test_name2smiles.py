@@ -1,4 +1,4 @@
-from convert_name_2_smiles import Name2Smiles
+from convert_name2smiles import Name2Smiles
 
 
 def test_name_2_smiles():
@@ -7,3 +7,6 @@ def test_name_2_smiles():
     smiles = name2smiles.get_smiles(chemical_name)
     assert smiles is not None
     assert smiles == "[N+](=O)([O-])C1=C(C)C(=CC(=C1)[N+](=O)[O-])[N+](=O)[O-]"
+    chemical_name = "4-Hydroxycoumarin"
+    smiles = name2smiles.get_smiles(chemical_name)
+    assert smiles is not None
