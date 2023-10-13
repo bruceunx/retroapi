@@ -10,8 +10,7 @@
 
 ```python
 
-from retro_api import RetroApi
-from convert_name2smiles import Name2Smiles
+from retroapi import RetroApi, Name2Smiles
 
 retro_api = RetroApi()
 
