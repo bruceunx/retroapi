@@ -1,6 +1,4 @@
 import requests
-# https://www.rcsb.org/chemical-sketch //draw
-
 
 class Name2Smiles:
 
