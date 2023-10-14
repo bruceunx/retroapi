@@ -49,3 +49,38 @@ if conds is not None:
     # check reaction condition with plausible
     pass
 ```
+
+## API Documentation
+
+### Class Name2Smiles
+
+- get_smiles
+  - parameter
+    - chemical_name: str
+  - output
+    - smiles: str
+
+### Class RetroApi
+
+- validate_smiles
+
+  - parameter
+    - smiles: str
+  - output
+    - true/false
+
+- predict_routes
+
+  - parameter
+    - smiles: str
+  - output
+    - routes: list
+
+- process_reaction
+  - parameter
+    - product: str
+      > product smiles
+    - reactants: str
+      > reactants smiles jointed by "." like "C=CC(=O)O.COc1cc(Br)cc(OC)c1OC"
+  - output
+    conditions: list
