@@ -1,5 +1,7 @@
 ## RetroSynthesis API
 
+![test](https://github.com/bruceunx/retroapi/actions/workflows/python-app.yml/badge.svg)
+
 - retroapi get predict routes given target molecule.
 
 - supply plausible value for all predicts.
