@@ -88,10 +88,13 @@ class RetroApi:
         return None
 
     def get_syn_conditions(self, task_id: str) -> List | None:
-        res = requests.get(self.Cond_URL.format(task_id))
-        if res.status_code == 200:
-            return res.json()["output"]
-        return None
+        for _ in range(5):
+            res = requests.get(self.Cond_URL.format(task_id))
+            if res.json()['complete']:
+                break
+        else:
+            return None
+        return res.json()["output"]
 
     def process_reaction(self, product: str, reactants: str) -> List | None:
         task_id = self.create_syn_task(product, reactants)
