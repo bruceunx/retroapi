@@ -34,12 +34,7 @@ def test_image():
     # smiles = "CC(=O)OC(C)=O.COc1cc(C=O)cc(OC)c1OC>>COc1cc(C=CC(=O)O)cc(OC)c1OC"
     smiles = "COc1cc(C=CC(=O)O)cc(OC)c1OC"  # reagent
     img_bytes = api.get_image_from_smiles(smiles)
-    if img_bytes is not None:
-        from PIL import Image
-        import io
-        image = Image.open(io.BytesIO(img_bytes))
-        image.save("sample.png")
-        assert image is not None
+    assert type(img_bytes) == bytes
 
 def test_synthesis_task():
     api = RetroApi()
