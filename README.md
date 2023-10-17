@@ -8,6 +8,15 @@
 
 - predict conditions base on one reaction.
 
+### Install
+
+- using pip
+
+```bash
+pip install retroapi
+
+```
+
 ### Usage
 
 ```python
