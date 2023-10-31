@@ -30,7 +30,7 @@ setup(
         'Programming Language :: Python :: 3.12',
     ],
     python_requires=">=3.8,<3.12",
-    install_requires=["requests"],
+    install_requires=["requests", "aiohttp"],
     packages=find_packages(),
     include_package_data=True
 )
