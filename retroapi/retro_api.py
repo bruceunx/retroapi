@@ -86,7 +86,7 @@ class RetroApi:
                 res_data = await res.json()
                 if res_data['complete']:
                     return res_data["output"]
-            await asyncio.sleep(2)
+                await asyncio.sleep(2)
         return None
 
     def predict_routes(self, smiles: str) -> List | None:
@@ -189,7 +189,7 @@ class RetroApi:
                 res_data = await res.json()
                 if res_data['complete']:
                     return res_data["output"]
-            await asyncio.sleep(2)
+                await asyncio.sleep(2)
         return None
 
     def process_reaction(self, product: str, reactants: str) -> List | None:
