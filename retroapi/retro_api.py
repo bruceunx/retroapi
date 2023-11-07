@@ -1,3 +1,5 @@
+import time
+import asyncio
 from typing import List
 import aiohttp
 
@@ -67,10 +69,11 @@ class RetroApi:
 
     def get_routes(self, task_id: str) -> List | None:
         url = self.Route_URL.format(task_id)
-        for _ in range(5):
+        for _ in range(10):
             res = requests.get(url)
             if res.json()['complete']:
                 break
+            time.sleep(2)
         else:
             return None
         return res.json()["output"]
@@ -78,11 +81,12 @@ class RetroApi:
     async def aget_routes(self, task_id: str) -> List | None:
         url = self.Route_URL.format(task_id)
         async with aiohttp.ClientSession() as client:
-            for _ in range(5):
+            for _ in range(10):
                 res = await client.get(url)
                 res_data = await res.json()
                 if res_data['complete']:
                     return res_data["output"]
+            await asyncio.sleep(2)
         return None
 
     def predict_routes(self, smiles: str) -> List | None:
@@ -169,21 +173,23 @@ class RetroApi:
         return None
 
     def get_syn_conditions(self, task_id: str) -> List | None:
-        for _ in range(5):
+        for _ in range(10):
             res = requests.get(self.Cond_URL.format(task_id))
             if res.json()['complete']:
                 break
+            time.sleep(2)
         else:
             return None
         return res.json()["output"]
 
     async def aget_syn_conditions(self, task_id: str) -> List | None:
         async with aiohttp.ClientSession() as client:
-            for _ in range(5):
+            for _ in range(10):
                 res = await client.get(self.Cond_URL.format(task_id))
                 res_data = await res.json()
                 if res_data['complete']:
                     return res_data["output"]
+            await asyncio.sleep(2)
         return None
 
     def process_reaction(self, product: str, reactants: str) -> List | None:
