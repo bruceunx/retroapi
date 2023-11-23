@@ -1,70 +1,84 @@
+from typing import Any, List, Dict
 import time
 import asyncio
-from typing import List
 import aiohttp
 
 import requests
 
+RouteTaskData = {
+    "retro_backend_options": [{
+        "retro_backend": "template_relevance",
+        "retro_model_name": "reaxys",
+        "max_num_templates": 1000,
+        "max_cum_prob": 0.999,
+        "attribute_filter": []
+    }],
+    "banned_chemicals": [],
+    "banned_reactions": [],
+    "use_fast_filter":
+    True,
+    "fast_filter_threshold":
+    0.001,
+    "retro_rerank_backend":
+    "relevance_heuristic",
+    "cluster_precursors":
+    False,
+    "cluster_setting": {
+        "feature": "original",
+        "cluster_method": "hdbscan",
+        "fp_type": "morgan",
+        "fp_length": 512,
+        "fp_radius": 1,
+        "classification_threshold": 0.2
+    },
+    "extract_template":
+    False,
+    "return_reacting_atoms":
+    True,
+    "selectivity_check":
+    True,
+    "group_by_strategy":
+    True
+}
+
 
 class RetroApi:
 
-    Valid_URL = "https://askcos.mit.edu/api/v2/rdkit/smiles/validate/"
-    Task_URL = "https://askcos.mit.edu/api/v2/retro/"
-    Route_URL = "https://askcos.mit.edu/api/v2/celery/task/{}/"
-    Stock_URL = "https://askcos.mit.edu/api/v2/buyables/?q={}"
+    Valid_URL = "https://askcos.mit.edu/api/rdkit/validate/"
 
-    ReactionTemplate_URL = "https://askcos.mit.edu/api/template/?id=5e1f4b6e63488328509969cc"
-    Image_URL = "https://askcos.mit.edu/api/v2/draw/?smiles={}"
+    Task_URL = "https://askcos.mit.edu/api/tree-search/expand-one/call-async/"
+    Route_URL = "https://askcos.mit.edu/api/legacy/celery/task/{}/"
 
-    SynTask_URL = "https://askcos.mit.edu/api/v2/context/"
-    Cond_URL = "https://askcos.mit.edu/api/v2/celery/task/{}"
+    SynTask_URL = "https://askcos.mit.edu/api/legacy/context/"
+    Cond_URL = "https://askcos.mit.edu/api/legacy/celery/task/{}/"
+
+    Image_URL = "https://askcos.mit.edu/api/draw/?smiles={}"
+
+    def __init__(self, token: str) -> None:
+        self.headers = {"Authorization": token}
 
     def create_task(self, smiles: str) -> str | None:
-        data = {
-            "target": smiles,
-            "template_set": "reaxys",
-            "template_prioritizer_version": 1,
-            "precursor_prioritizer": "RelevanceHeuristic",
-            "num_templates": 1000,
-            "max_cum_prob": 0.999,
-            "filter_threshold": 0.1,
-            "cluster_method": "kmeans",
-            "cluster_feature": "original",
-            "cluster_fp_type": "morgan",
-            "cluster_fp_length": 512,
-            "cluster_fp_radius": 1,
-            "selec_check": True,
-            "attribute_filter": []
+        data: Dict[str, Any] = {
+            "smiles": smiles,
         }
-        res = requests.post(self.Task_URL, json=data)
+        data.update(RouteTaskData)
+        res = requests.post(self.Task_URL, json=data, headers=self.headers)
         if res.status_code == 200:
-            return res.json()['task_id']
+            return res.json()
         else:
             return None
 
     async def acreate_task(self, smiles: str) -> str | None:
-        data = {
-            "target": smiles,
-            "template_set": "reaxys",
-            "template_prioritizer_version": 1,
-            "precursor_prioritizer": "RelevanceHeuristic",
-            "num_templates": 1000,
-            "max_cum_prob": 0.999,
-            "filter_threshold": 0.1,
-            "cluster_method": "kmeans",
-            "cluster_feature": "original",
-            "cluster_fp_type": "morgan",
-            "cluster_fp_length": 512,
-            "cluster_fp_radius": 1,
-            "selec_check": True,
-            "attribute_filter": []
+        data: Dict[str, Any] = {
+            "smiles": smiles,
         }
-
-        async with aiohttp.ClientSession() as client:
-            res = await client.post(self.Task_URL, data=data)
+        data.update(RouteTaskData)
+        async with aiohttp.ClientSession(headers=self.headers) as client:
+            res = await client.post(self.Task_URL, json=data)
+            print(await res.json())
             if res.status == 200:
                 res_data = await res.json()
-                return res_data['task_id']
+                return res_data
         return None
 
     def get_routes(self, task_id: str) -> List | None:
@@ -76,7 +90,7 @@ class RetroApi:
             time.sleep(2)
         else:
             return None
-        return res.json()["output"]
+        return res.json()["output"]["result"]['0']
 
     async def aget_routes(self, task_id: str) -> List | None:
         url = self.Route_URL.format(task_id)
@@ -85,7 +99,7 @@ class RetroApi:
                 res = await client.get(url)
                 res_data = await res.json()
                 if res_data['complete']:
-                    return res_data["output"]
+                    return res_data["output"]["result"]['0']
                 await asyncio.sleep(2)
         return None
 
@@ -109,26 +123,10 @@ class RetroApi:
 
     async def avalidate_smiles(self, smiles: str) -> bool:
         async with aiohttp.ClientSession() as client:
-            res = await client.post(self.Valid_URL, data={"smiles": smiles})
+            res = await client.post(self.Valid_URL, json={"smiles": smiles})
             if res.status == 200:
                 res_data = await res.json()
                 return res_data['valid_chem_name']
-        return False
-
-    def check_stock(self, smiles: str) -> bool:
-        url = self.Stock_URL.format(smiles)
-        res = requests.get(url)
-        if res.status_code == 200:
-            return len(res.json()["result"]) != 0
-        return False
-
-    async def acheck_stock(self, smiles: str) -> bool:
-        url = self.Stock_URL.format(smiles)
-        async with aiohttp.ClientSession() as client:
-            res = await client.get(url)
-            if res.status == 200:
-                res_data = await res.json()
-                return len(res_data["result"]) != 0
         return False
 
     def get_image_from_smiles(self, smiles: str) -> bytes | None:
@@ -153,7 +151,7 @@ class RetroApi:
             "return_scores": True,
             "num_results": 10
         }
-        res = requests.post(self.SynTask_URL, json=data)
+        res = requests.post(self.SynTask_URL, json=data, headers=self.headers)
         if res.status_code == 200:
             return res.json()["task_id"]
         return None
@@ -165,8 +163,8 @@ class RetroApi:
             "return_scores": True,
             "num_results": 10
         }
-        async with aiohttp.ClientSession() as client:
-            res = await client.post(self.SynTask_URL, data=data)
+        async with aiohttp.ClientSession(headers=self.headers) as client:
+            res = await client.post(self.SynTask_URL, json=data)
             if res.status == 200:
                 res_data = await res.json()
                 return res_data["task_id"]

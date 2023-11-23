@@ -3,8 +3,8 @@ from setuptools import find_packages, setup
 
 setup(
     name="retroapi",
-    version="0.5.0",
-    description="retroapi for retrosynthesis routes and exploring reaction conditions",
+    version="0.7.0",
+    description="A wrap retroapi package for retrosynthesis routes and exploring reaction conditions",
     long_description=Path("README.md").read_text(),
     long_description_content_type="text/markdown",
     url="https://github.com/bruceunx/retrosynthesis",

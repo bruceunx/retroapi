@@ -25,7 +25,9 @@ pip install retroapi
 
 from retroapi import RetroApi, Name2Smiles
 
-retro_api = RetroApi()
+token = "" # you may get token first
+
+retro_api = RetroApi(token)
 
 # if you have simles of molecule.
 smiles = "COc1cccc(OC(=O)/C=C/c2cc(OC)c(OC)c(OC)c2)c1"
@@ -69,7 +71,7 @@ from retroapi import RetroApi, Name2Smiles
 
 
 async def foo():
-    retro_api = RetroApi()
+    retro_api = RetroApi(token)
 
     # if you have simles of molecule.
     smiles = "COc1cccc(OC(=O)/C=C/c2cc(OC)c(OC)c(OC)c2)c1"
@@ -110,6 +112,11 @@ async def foo():
 ### add aync for package
 
 > with function name prefix with 'a', for example get_smile -> aget_smile
+
+
+### **Need Token** to use this package
+
+> It's wrap package for askcos.mit.edu API, so you can get token from website first.
 
 ## API Documentation
 
