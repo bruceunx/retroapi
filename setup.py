@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="retroapi",
-    version="0.7.0",
+    version="0.8.0",
     description="A wrap retroapi package for retrosynthesis routes and exploring reaction conditions",
     long_description=Path("README.md").read_text(),
     long_description_content_type="text/markdown",

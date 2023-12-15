@@ -75,15 +75,14 @@ class RetroApi:
         data.update(RouteTaskData)
         async with aiohttp.ClientSession(headers=self.headers) as client:
             res = await client.post(self.Task_URL, json=data)
-            print(await res.json())
             if res.status == 200:
                 res_data = await res.json()
                 return res_data
         return None
 
-    def get_routes(self, task_id: str) -> List | None:
+    def get_routes(self, task_id: str, try_num: int = 10) -> List | None:
         url = self.Route_URL.format(task_id)
-        for _ in range(10):
+        for _ in range(try_num):
             res = requests.get(url)
             if res.json()['complete']:
                 break
@@ -92,10 +91,10 @@ class RetroApi:
             return None
         return res.json()["output"]["result"]['0']
 
-    async def aget_routes(self, task_id: str) -> List | None:
+    async def aget_routes(self, task_id: str, try_num: int = 10) -> List | None:
         url = self.Route_URL.format(task_id)
         async with aiohttp.ClientSession() as client:
-            for _ in range(10):
+            for _ in range(try_num):
                 res = await client.get(url)
                 res_data = await res.json()
                 if res_data['complete']:
@@ -103,17 +102,17 @@ class RetroApi:
                 await asyncio.sleep(2)
         return None
 
-    def predict_routes(self, smiles: str) -> List | None:
+    def predict_routes(self, smiles: str, try_num:int =  10) -> List | None:
         task_id = self.create_task(smiles)
         if task_id is None:
             return None
-        return self.get_routes(task_id)
+        return self.get_routes(task_id, try_num)
 
-    async def apredict_routes(self, smiles: str) -> List | None:
+    async def apredict_routes(self, smiles: str, try_num:int = 10) -> List | None:
         task_id = await self.acreate_task(smiles)
         if task_id is None:
             return None
-        return await self.aget_routes(task_id)
+        return await self.aget_routes(task_id, try_num)
 
     def validate_smiles(self, smiles: str) -> bool:
         res = requests.post(self.Valid_URL, json={"smiles": smiles})
@@ -170,8 +169,8 @@ class RetroApi:
                 return res_data["task_id"]
         return None
 
-    def get_syn_conditions(self, task_id: str) -> List | None:
-        for _ in range(10):
+    def get_syn_conditions(self, task_id: str, try_num: int = 10) -> List | None:
+        for _ in range(try_num):
             res = requests.get(self.Cond_URL.format(task_id))
             if res.json()['complete']:
                 break
@@ -180,9 +179,9 @@ class RetroApi:
             return None
         return res.json()["output"]
 
-    async def aget_syn_conditions(self, task_id: str) -> List | None:
+    async def aget_syn_conditions(self, task_id: str, try_num: int = 10) -> List | None:
         async with aiohttp.ClientSession() as client:
-            for _ in range(10):
+            for _ in range(try_num):
                 res = await client.get(self.Cond_URL.format(task_id))
                 res_data = await res.json()
                 if res_data['complete']:
@@ -190,14 +189,14 @@ class RetroApi:
                 await asyncio.sleep(2)
         return None
 
-    def process_reaction(self, product: str, reactants: str) -> List | None:
+    def process_reaction(self, product: str, reactants: str, try_num: int = 10) -> List | None:
         task_id = self.create_syn_task(product, reactants)
         if task_id is None:
             return None
-        return self.get_syn_conditions(task_id)
+        return self.get_syn_conditions(task_id, try_num)
 
-    async def aprocess_reaction(self, product: str, reactants: str) -> List | None:
+    async def aprocess_reaction(self, product: str, reactants: str, try_num: int = 10) -> List | None:
         task_id = await self.acreate_syn_task(product, reactants)
         if task_id is None:
             return None
-        return await self.aget_syn_conditions(task_id)
+        return await self.aget_syn_conditions(task_id, try_num)

@@ -109,14 +109,22 @@ async def foo():
 
 ## Change log:
 
-### add aync for package
+### Add try_times in predict_routes and process_reaction w/ async
 
-> with function name prefix with 'a', for example get_smile -> aget_smile
+```python
+
+routes = await retro_api.apredict_routes(smiles, try_num=20)
+
+```
 
 
 ### **Need Token** to use this package
 
 > It's wrap package for askcos.mit.edu API, so you can get token from website first.
+
+### add aync for package
+
+> with function name prefix with 'a', for example get_smile -> aget_smile
 
 ## API Documentation
 
