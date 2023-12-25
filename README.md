@@ -10,6 +10,27 @@
 
 - add aync support
 
+- deploy your backend server with **torchserve** (if api failed)
+
+  > install torchserve
+  > run download_models.sh
+  > run
+
+  ```bash
+  torchserve --start --foreground --ncs --model-store=mars --models reaxys=reaxys.mar
+
+  ```
+
+  > test server
+
+  ```bash
+
+   curl http://127.0.0.1:8080/predictions/reaxys \                                                                                                            (base)
+                --header "Content-Type: application/json" \
+                --request POST \
+                --data '{"smiles": ["CC(C)(C)OC(=O)N1CCC(OCCO)CC1"]}'
+  ```
+
 ### Install
 
 - using pip
@@ -109,6 +130,8 @@ async def foo():
 
 ## Change log:
 
+### 2023-12-25 Run backend server with torchserve
+
 ### Add try_times in predict_routes and process_reaction w/ async
 
 ```python
@@ -116,7 +139,6 @@ async def foo():
 routes = await retro_api.apredict_routes(smiles, try_num=20)
 
 ```
-
 
 ### **Need Token** to use this package
 
