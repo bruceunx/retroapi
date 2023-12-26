@@ -12,7 +12,7 @@
 
 - deploy your backend server with **torchserve** (if api failed)
 
-  > install torchserve
+  > install torchserve and other libraries from requirements.txt
   > run download_models.sh
   > run
 
