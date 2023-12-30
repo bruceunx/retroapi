@@ -130,6 +130,8 @@ async def foo():
 
 ## Change log:
 
+### 2023-12-30 Extract condition recommend code from ASKCOS to notebook for local test.
+
 ### 2023-12-25 Run backend server with torchserve
 
 ### Add try_times in predict_routes and process_reaction w/ async
