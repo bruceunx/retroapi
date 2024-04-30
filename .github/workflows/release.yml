@@ -23,5 +23,15 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
+
+      - name: Upload wheels to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GIT_TOKEN }}
+          file: dist/*
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: "Retro API"
