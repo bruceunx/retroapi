@@ -4,7 +4,7 @@ attrs==23.1.0
 build==1.0.3
 certifi==2024.2.2
 charset-normalizer==3.3.2
-docutils==0.20.1
+docutils==0.21.2
 frozenlist==1.4.0
 idna==3.6
 importlib-metadata==7.0.0
