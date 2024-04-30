@@ -3,8 +3,9 @@ from setuptools import find_packages, setup
 
 setup(
     name="retroapi",
-    version="0.8.0",
-    description="A wrap retroapi package for retrosynthesis routes and exploring reaction conditions",
+    version="0.8.2",
+    description=
+    "A wrap retroapi package for retrosynthesis routes and exploring reaction conditions",
     long_description=Path("README.md").read_text(),
     long_description_content_type="text/markdown",
     url="https://github.com/bruceunx/retrosynthesis",
@@ -29,8 +30,7 @@ setup(
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
     ],
-    python_requires=">=3.8,<3.12",
+    python_requires=">=3.8,<3.13",
     install_requires=["requests", "aiohttp"],
     packages=find_packages(),
-    include_package_data=True
-)
+    include_package_data=True)
