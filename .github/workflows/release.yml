@@ -28,7 +28,7 @@ jobs:
       #     password: ${{ secrets.PYPI_API_TOKEN }}
 
       - name: Upload wheels to release
-      uses: svenstaro/upload-release-action@v2
+        uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GIT_TOKEN }}
           file: dist/retroapi-${{ github.ref }}-py3-none-any.whl
