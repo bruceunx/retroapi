@@ -2,8 +2,7 @@ name: Release to PyPI
 
 on:
   push:
-    tags:
-      - 'v\d+.\d+.\d+'
+    tags: [v\d+\.\d+\.\d+]
 
 jobs:
   build-and-publish:
@@ -20,6 +19,12 @@ jobs:
 
       - name: Build package
         run: python -m build
+
+      - name: Get tag
+        id: tag
+        uses: dawidd6/action-get-tag@v1
+        with:
+          strip_v: true
 
       # - name: Publish to PyPI
       #   uses: pypa/gh-action-pypi-publish@release/v1
